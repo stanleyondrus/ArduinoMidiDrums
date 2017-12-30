@@ -32,8 +32,8 @@
 #define MIDI_NOTE_OFF 0b1000    // MS nibble for note off status message
 
 uint8_t padNote[NUMBER_OF_PADS] = {60, 62, 64, 65, 67, 69, 71, 72};               // MIDI notes [0-127]
-uint8_t padThreshold[NUMBER_OF_PADS] = {400, 400, 400, 400, 400, 400, 400, 400};  // trigger treshold values [0-1023]
-uint8_t padCycles[NUMBER_OF_PADS] = {90, 90, 90, 90, 90, 90, 90, 90};             // number of cycles before the second trigger is allowed
+uint16_t padThreshold[NUMBER_OF_PADS] = {400, 400, 400, 400, 400, 400, 400, 400};  // trigger treshold values [0-1023]
+uint16_t padCycles[NUMBER_OF_PADS] = {90, 90, 90, 90, 90, 90, 90, 90};             // number of cycles before the second trigger is allowed [0-65535]
 
 uint8_t activePad;                          // each bit represents a pad state
 uint8_t activeHiHat;                        // hi-hat state
