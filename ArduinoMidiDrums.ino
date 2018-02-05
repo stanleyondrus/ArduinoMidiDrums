@@ -37,7 +37,7 @@ uint16_t padCycles[NUMBER_OF_PADS] = {90, 90, 90, 90, 90, 90, 90, 90};          
 
 uint8_t activePad;                          // each bit represents a pad state
 uint8_t activeHiHat;                        // hi-hat state
-uint8_t padCurrentCycles[NUMBER_OF_PADS];   // number of cycles since the pad was triggered
+uint16_t padCurrentCycles[NUMBER_OF_PADS];   // number of cycles since the pad was triggered
 
 void setup() {
   pinMode(HI_HAT_PEDAL_PIN, INPUT_PULLUP);                                 // intialize the hi-hat pedal pin as input pullup
@@ -46,7 +46,7 @@ void setup() {
 
 void loop() {
   for (uint8_t pin = 0; pin < NUMBER_OF_PADS; pin++) {                     // loop through all of the pads
-    uint8_t val = analogRead(pin);                                         // read the input pin   
+    uint16_t val = analogRead(pin);                                         // read the input pin   
     if ((val > padThreshold[pin]) && (!padActive(pin))) {                  // if hit strong enough
 
       val = VELOCITY_ACTIVE ? velocityAlgorithm(val) : MIDI_MAX_VELOCITY;  // if velocity sensitive, calculate the new value, otherwise apply the maximum value
@@ -76,7 +76,7 @@ void loop() {
   }
 }
 
-uint8_t velocityAlgorithm(uint8_t val) {
+uint8_t velocityAlgorithm(uint16_t val) {
   return (val - 0) * (127 - 0) / (1023 - 0) + 0;                           // remap the val from [0-1023] to [0-127]
 }
 
