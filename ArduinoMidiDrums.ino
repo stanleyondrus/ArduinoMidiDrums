@@ -25,6 +25,7 @@
 #define HI_HAT_CLOSED_NOTE 63   // closed hi-hat MIDI note
 
 #define VELOCITY_ACTIVE 1       // velocity sensitive ON-OFF  [1-0]
+#define LOG_MAPPING 0           // 1-logarithmic 0-linear velocity mapping
 #define MIDI_CHANNEL 1          // MIDI channel [1-16]
 
 #define MIDI_MAX_VELOCITY 127
@@ -49,7 +50,7 @@ void loop() {
     uint16_t val = analogRead(pin);                                         // read the input pin   
     if ((val > padThreshold[pin]) && (!padActive(pin))) {                  // if hit strong enough
 
-      val = VELOCITY_ACTIVE ? velocityAlgorithm(val) : MIDI_MAX_VELOCITY;  // if velocity sensitive, calculate the new value, otherwise apply the maximum value
+      val = VELOCITY_ACTIVE ? velocityAlgorithm(val,LOG_MAPPING) : MIDI_MAX_VELOCITY;  // if velocity sensitive, calculate the new value, otherwise apply the maximum value
       uint8_t activeHiHat = checkHiHat(pin) ? 1 : 0;                       // if pedal pressed and current pin is hi-hat, set hi-hat active
       uint8_t note = activeHiHat ? HI_HAT_CLOSED_NOTE : padNote[pin];      // if hi-hat active, set note to HI_HAT_CLOSED_NOTE, otherwise use the padNote[pin]
 
@@ -76,8 +77,12 @@ void loop() {
   }
 }
 
-uint8_t velocityAlgorithm(uint16_t val) {
-  return (val - 0) * (127 - 0) / (1023 - 0) + 0;                           // remap the val from [0-1023] to [0-127]
+// remap the val from [0-1023] to [0-127]
+uint8_t velocityAlgorithm(uint16_t val, uint8_t logswitch) {
+  if (logswitch) {
+     return log(val + 1)/ log(1024) * 127;
+  }
+    return (val - 0) * (127 - 0) / (1023 - 0) + 0;                       
 }
 
 uint8_t checkHiHat(uint8_t currentPin) {                                   // check if hi-hat pedal pressed and if current pin is hi-hat
