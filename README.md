@@ -1,7 +1,5 @@
 #  Arduino MIDI Drums
 
-Tutorial - http://stanleyprojects.com/projects/programming/arduinodrums/
-
 - hi-hat footswitch support
 - velocity sensitive
 
